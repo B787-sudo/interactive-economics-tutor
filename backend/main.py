@@ -21,11 +21,14 @@ class QuestionRequest(BaseModel):
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PDF_PATH = os.path.join(BASE_DIR, "data", "economics.pdf")
 
+chapter_text = None  # cache
+
 @app.post("/ask")
 def ask(req: QuestionRequest):
-    try:
-        chapter_text = extract_text(PDF_PATH)
-        reply = answer_question(req.question, chapter_text)
-        return {"teacher": reply}
-    except Exception as e:
-        return {"teacher": "Error processing the request"}
+    global chapter_text
+
+    if chapter_text is None:
+        chapter_text = extract_text(PDF_PATH)  # load once
+
+    reply = answer_question(req.question, chapter_text)
+    return {"teacher": reply}
