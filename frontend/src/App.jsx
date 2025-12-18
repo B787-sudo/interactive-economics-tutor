@@ -12,11 +12,15 @@ function App() {
     try {
       setLoading(true);
 
-      const res = await fetch("http://127.0.0.1:8000/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
-      });
+     const res = await fetch(
+  `${import.meta.env.VITE_API_URL}/ask`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question }),
+  }
+);
+
 
       const data = await res.json();
       setAnswer(data.teacher);
